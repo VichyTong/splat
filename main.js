@@ -821,6 +821,78 @@ async function main() {
     const u_focal = gl.getUniformLocation(program, "focal");
     const u_view = gl.getUniformLocation(program, "view");
 
+    // Define the vertices for the axes (each axis is a line from (0,0,0) to (1,0,0), etc.)
+    const axesVertices = new Float32Array([
+        // X-axis (red)
+        0, 0, 0,   5, 0, 0,
+        // Y-axis (green)
+        0, 0, 0,   0, 5, 0,
+        // Z-axis (blue)
+        0, 0, 0,   0, 0, 5,
+    ]);
+
+    // Create a buffer for the axes vertices
+    const axesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, axesBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, axesVertices, gl.STATIC_DRAW);
+
+    // Axes shaders
+
+    // Vertex Shader for Axes
+    const axesVertexShaderSource = `
+    #version 300 es
+    precision highp float;
+
+    uniform mat4 projection;
+    uniform mat4 view;
+
+    in vec3 aPosition;
+
+    void main() {
+        gl_Position = projection * view * vec4(aPosition, 1.0);
+    }
+    `.trim();
+
+    // Fragment Shader for Axes
+    const axesFragmentShaderSource = `
+    #version 300 es
+    precision highp float;
+
+    uniform vec3 uColor;
+
+    out vec4 fragColor;
+
+    void main() {
+        fragColor = vec4(uColor, 1.0);
+    }
+    `.trim();
+
+    // Compile and link the axes shaders
+    const axesVertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(axesVertexShader, axesVertexShaderSource);
+    gl.compileShader(axesVertexShader);
+    if (!gl.getShaderParameter(axesVertexShader, gl.COMPILE_STATUS))
+        console.error(gl.getShaderInfoLog(axesVertexShader));
+
+    const axesFragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(axesFragmentShader, axesFragmentShaderSource);
+    gl.compileShader(axesFragmentShader);
+    if (!gl.getShaderParameter(axesFragmentShader, gl.COMPILE_STATUS))
+        console.error(gl.getShaderInfoLog(axesFragmentShader));
+
+    const axesProgram = gl.createProgram();
+    gl.attachShader(axesProgram, axesVertexShader);
+    gl.attachShader(axesProgram, axesFragmentShader);
+    gl.linkProgram(axesProgram);
+    if (!gl.getProgramParameter(axesProgram, gl.LINK_STATUS))
+        console.error(gl.getProgramInfoLog(axesProgram));
+
+    // Get attribute and uniform locations for the axes program
+    const axesPositionLocation = gl.getAttribLocation(axesProgram, "aPosition");
+    const axesProjectionLocation = gl.getUniformLocation(axesProgram, "projection");
+    const axesViewLocation = gl.getUniformLocation(axesProgram, "view");
+    const axesColorLocation = gl.getUniformLocation(axesProgram, "uColor");
+
     // positions
     const triangleVertices = new Float32Array([-2, -2, 2, -2, 2, 2, -2, 2]);
     const vertexBuffer = gl.createBuffer();
@@ -1177,6 +1249,7 @@ async function main() {
     let leftGamepadTrigger, rightGamepadTrigger;
 
     const frame = (now) => {
+        gl.clear(gl.COLOR_BUFFER_BIT);
         let inv = invert4(viewMatrix);
         let shiftKey = activeKeys.includes("Shift") || activeKeys.includes("ShiftLeft") || activeKeys.includes("ShiftRight")
 
@@ -1330,13 +1403,60 @@ async function main() {
         const currentFps = 1000 / (now - lastFrame) || 0;
         avgFps = avgFps * 0.9 + currentFps * 0.1;
 
+        // Before rendering the axes, adjust WebGL state
+        gl.disable(gl.BLEND);
+        gl.enable(gl.DEPTH_TEST);
+
+        // Use the axes program
+        gl.useProgram(axesProgram);
+
+        // Set the uniforms for the axes shaders
+        gl.uniformMatrix4fv(axesProjectionLocation, false, projectionMatrix);
+        gl.uniformMatrix4fv(axesViewLocation, false, actualViewMatrix);
+
+        // Bind the axes buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, axesBuffer);
+        gl.enableVertexAttribArray(axesPositionLocation);
+        gl.vertexAttribPointer(axesPositionLocation, 3, gl.FLOAT, false, 0, 0);
+
+        // Render the X-axis (red)
+        gl.uniform3f(axesColorLocation, 1.0, 0.0, 0.0);
+        gl.drawArrays(gl.LINES, 0, 2);
+
+        // Render the Y-axis (green)
+        gl.uniform3f(axesColorLocation, 0.0, 1.0, 0.0);
+        gl.drawArrays(gl.LINES, 2, 2);
+
+        // Render the Z-axis (blue)
+        gl.uniform3f(axesColorLocation, 0.0, 0.0, 1.0);
+        gl.drawArrays(gl.LINES, 4, 2);
+
+        // After rendering the axes, restore the WebGL state for the main scene
+        gl.enable(gl.BLEND);
+        gl.disable(gl.DEPTH_TEST);
+
+        // Switch back to the main program
+        gl.useProgram(program);
+
+        // Re-bind buffers and set up attributes for the main program
+
+        // Set up position attribute
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.enableVertexAttribArray(a_position);
+        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+        // Set up index attribute
+        gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
+        gl.enableVertexAttribArray(a_index);
+        gl.vertexAttribIPointer(a_index, 1, gl.INT, false, 0, 0);
+        gl.vertexAttribDivisor(a_index, 1);
+
+       // Now proceed to render the main scene
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
-            gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {
-            gl.clear(gl.COLOR_BUFFER_BIT);
             document.getElementById("spinner").style.display = "";
             start = Date.now() + 2000;
         }

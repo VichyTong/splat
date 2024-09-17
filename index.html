@@ -185,6 +185,28 @@
 			body.nohf #progress, body.nohf .cube-face {
 				background: #ff9d0d;
 			}
+
+			#controls {
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				z-index: 100;
+				background: rgba(0, 0, 0, 0.5);
+				padding: 5px;
+				border-radius: 5px;
+			}
+			#controls button {
+				margin: 2px;
+				padding: 5px;
+				font-size: small;
+				background-color: #333;
+				color: white;
+				border: none;
+				border-radius: 3px;
+			}
+			#controls button:hover {
+				background-color: #555;
+			}
 		</style>
 	</head>
 	<body>
@@ -264,6 +286,28 @@ other
 				</div>
 			</div>
 		</div>
+
+		<div id="controls">
+			<!-- Movement Buttons -->
+			<button id="moveXPos">Move X+</button>
+			<button id="moveXNeg">Move X-</button>
+			<button id="moveYPos">Move Y+</button>
+			<button id="moveYNeg">Move Y-</button>
+			<button id="moveZPos">Move Z+</button>
+			<button id="moveZNeg">Move Z-</button>
+			<br />
+			<!-- Rotation Buttons -->
+			<button id="rotXPos">Rotate X+</button>
+			<button id="rotXNeg">Rotate X-</button>
+			<button id="rotYPos">Rotate Y+</button>
+			<button id="rotYNeg">Rotate Y-</button>
+			<button id="rotZPos">Rotate Z+</button>
+			<button id="rotZNeg">Rotate Z-</button>
+			<br />
+			<!-- Reset Button -->
+			<button id="resetAxes">Reset Axes</button>
+		</div>
+
 		<canvas id="canvas"></canvas>
 
 		<div id="quality">

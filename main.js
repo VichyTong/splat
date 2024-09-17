@@ -845,11 +845,12 @@ async function main() {
 
     uniform mat4 projection;
     uniform mat4 view;
+    uniform mat4 model; // Add model matrix uniform
 
     in vec3 aPosition;
 
     void main() {
-        gl_Position = projection * view * vec4(aPosition, 1.0);
+        gl_Position = projection * view * model * vec4(aPosition, 1.0);
     }
     `.trim();
 
@@ -892,6 +893,72 @@ async function main() {
     const axesProjectionLocation = gl.getUniformLocation(axesProgram, "projection");
     const axesViewLocation = gl.getUniformLocation(axesProgram, "view");
     const axesColorLocation = gl.getUniformLocation(axesProgram, "uColor");
+    const axesModelLocation = gl.getUniformLocation(axesProgram, "model");
+
+    // Initialize the axes model matrix
+    let axesModelMatrix = [
+        1, 0, 0, 0, // Column 0
+        0, 1, 0, 0, // Column 1
+        0, 0, 1, 0, // Column 2
+        0, 0, 0, 1, // Column 3
+    ];
+
+    function moveAxes(dx, dy, dz) {
+        axesModelMatrix = translate4(axesModelMatrix, dx, dy, dz);
+    }
+
+    function rotateAxes(rx, ry, rz) {
+        if (rx !== 0) {
+            axesModelMatrix = rotate4(axesModelMatrix, rx, 1, 0, 0);
+        }
+        if (ry !== 0) {
+            axesModelMatrix = rotate4(axesModelMatrix, ry, 0, 1, 0);
+        }
+        if (rz !== 0) {
+            axesModelMatrix = rotate4(axesModelMatrix, rz, 0, 0, 1);
+        }
+    }
+
+    function resetAxes() {
+        axesModelMatrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ];
+    }
+
+    const moveXPosBtn = document.getElementById("moveXPos");
+    const moveXNegBtn = document.getElementById("moveXNeg");
+    const moveYPosBtn = document.getElementById("moveYPos");
+    const moveYNegBtn = document.getElementById("moveYNeg");
+    const moveZPosBtn = document.getElementById("moveZPos");
+    const moveZNegBtn = document.getElementById("moveZNeg");
+
+    const rotXPosBtn = document.getElementById("rotXPos");
+    const rotXNegBtn = document.getElementById("rotXNeg");
+    const rotYPosBtn = document.getElementById("rotYPos");
+    const rotYNegBtn = document.getElementById("rotYNeg");
+    const rotZPosBtn = document.getElementById("rotZPos");
+    const rotZNegBtn = document.getElementById("rotZNeg");
+
+    const resetAxesBtn = document.getElementById("resetAxes");
+
+    moveXPosBtn.addEventListener("click", () => moveAxes(0.1, 0, 0));
+    moveXNegBtn.addEventListener("click", () => moveAxes(-0.1, 0, 0));
+    moveYPosBtn.addEventListener("click", () => moveAxes(0, 0.1, 0));
+    moveYNegBtn.addEventListener("click", () => moveAxes(0, -0.1, 0));
+    moveZPosBtn.addEventListener("click", () => moveAxes(0, 0, 0.1));
+    moveZNegBtn.addEventListener("click", () => moveAxes(0, 0, -0.1));
+
+    rotXPosBtn.addEventListener("click", () => rotateAxes(0.1, 0, 0));
+    rotXNegBtn.addEventListener("click", () => rotateAxes(-0.1, 0, 0));
+    rotYPosBtn.addEventListener("click", () => rotateAxes(0, 0.1, 0));
+    rotYNegBtn.addEventListener("click", () => rotateAxes(0, -0.1, 0));
+    rotZPosBtn.addEventListener("click", () => rotateAxes(0, 0, 0.1));
+    rotZNegBtn.addEventListener("click", () => rotateAxes(0, 0, -0.1));
+
+    resetAxesBtn.addEventListener("click", resetAxes);
 
     // positions
     const triangleVertices = new Float32Array([-2, -2, 2, -2, 2, 2, -2, 2]);
@@ -1413,6 +1480,7 @@ async function main() {
         // Set the uniforms for the axes shaders
         gl.uniformMatrix4fv(axesProjectionLocation, false, projectionMatrix);
         gl.uniformMatrix4fv(axesViewLocation, false, actualViewMatrix);
+        gl.uniformMatrix4fv(axesModelLocation, false, axesModelMatrix);
 
         // Bind the axes buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, axesBuffer);

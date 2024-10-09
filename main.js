@@ -927,6 +927,51 @@ async function main() {
             0, 0, 0, 1,
         ];
     }
+    
+    function saveAxesData() {
+        // Extract the translation and rotation from the axesModelMatrix
+        // axesModelMatrix is a 4x4 matrix stored in a flat array of length 16
+        // The rotation is in the upper-left 3x3 part of the matrix
+        // The translation is in the last column (indices 12, 13, 14)
+    
+        const translation = {
+            x: axesModelMatrix[12],
+            y: axesModelMatrix[13],
+            z: axesModelMatrix[14],
+        };
+    
+        const rotationMatrix = [
+            axesModelMatrix[0], axesModelMatrix[4], axesModelMatrix[8],
+            axesModelMatrix[1], axesModelMatrix[5], axesModelMatrix[9],
+            axesModelMatrix[2], axesModelMatrix[6], axesModelMatrix[10],
+        ];
+    
+        // Optionally, convert the rotation matrix to Euler angles or quaternions if needed
+        // For now, we'll save the rotation matrix directly
+    
+        const axesData = {
+            translation: translation,
+            rotationMatrix: rotationMatrix,
+        };
+    
+        // Convert the axes data to a JSON string
+        const jsonData = JSON.stringify(axesData, null, 2);
+    
+        // Create a Blob from the JSON data
+        const blob = new Blob([jsonData], { type: "application/json" });
+    
+        // Create a link element to initiate a download
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "axesData.json";
+    
+        // Append the link to the document and trigger a click
+        document.body.appendChild(link);
+        link.click();
+    
+        // Clean up
+        document.body.removeChild(link);
+    }    
 
     const moveXPosBtn = document.getElementById("moveXPos");
     const moveXNegBtn = document.getElementById("moveXNeg");
@@ -943,6 +988,7 @@ async function main() {
     const rotZNegBtn = document.getElementById("rotZNeg");
 
     const resetAxesBtn = document.getElementById("resetAxes");
+    const saveAxesBtn = document.getElementById("saveAxes");
 
     moveXPosBtn.addEventListener("click", () => moveAxes(0.1, 0, 0));
     moveXNegBtn.addEventListener("click", () => moveAxes(-0.1, 0, 0));
@@ -959,6 +1005,7 @@ async function main() {
     rotZNegBtn.addEventListener("click", () => rotateAxes(0, 0, -0.1));
 
     resetAxesBtn.addEventListener("click", resetAxes);
+    saveAxesBtn.addEventListener("click", saveAxesData);
 
     // positions
     const triangleVertices = new Float32Array([-2, -2, 2, -2, 2, 2, -2, 2]);

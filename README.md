@@ -1,65 +1,75 @@
+Languge: [English](README_en.md) | [简体中文](README.md)
+
 # splat
 
-This is a WebGL implementation of a real-time renderer for [3D Gaussian Splatting for Real-Time Radiance Field Rendering](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/), a recently developed technique for taking a set of pictures and generating a photorealistic navigable 3D scene out of it. As it is essentially an extension of rendering point clouds, rendering scenes generated with this technique can be done very efficiently on ordinary graphics hardware- unlike prior comparable techniques such as NeRFs.
+这是一个基于 WebGL 的实时渲染器实现，旨在展示 [3D 高斯点云实时辐射场渲染](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) 的技术。这是一个最近开发的技术，可以通过一组照片生成一个可导航的逼真的 3D 场景。由于它本质上是点云渲染的扩展，因此使用该技术生成的场景可以在普通的图形硬件上高效渲染——与之前类似的技术（如 NeRF）不同。
 
-You can [try it out here](https://antimatter15.com/splat/).
-
-
+你可以在 [这里体验](https://antimatter15.com/splat/)。
 
 https://github.com/antimatter15/splat/assets/30054/878d5d34-e0a7-4336-85df-111ff22daf4b
 
+## 控制
+
+移动（箭头键）
+
+- 左/右箭头键横向移动
+- 上/下箭头键前后移动
+- `space` 跳跃
+
+摄像机角度（wasd）
+
+- `a`/`d` 左右旋转摄像机
+- `w`/`s` 上下倾斜摄像机
+- `q`/`e` 逆时针/顺时针旋转摄像机
+- `i`/`k` 和 `j`/`l` 环绕摄像机
+
+触摸板
+
+- 上下滚动向下环绕
+- 左右滚动左右环绕
+- 捏合缩放前后移动
+- 按住 ctrl 键并上下滚动前后移动
+- 按住 shift 键并上下滚动上下移动
+- 按住 shift 键并左右滚动左右平移
+
+鼠标
+
+- 点击并拖动环绕摄像机
+- 右键点击（或按住 ctrl/cmd 键）并上下拖动前后移动
+- 右键点击（或按住 ctrl/cmd 键）并左右拖动左右平移
+
+触摸（移动设备）
+
+- 单指环绕摄像机
+- 双指捏合前后移动
+- 双指旋转旋转摄像机
+- 双指平移左右和上下移动
+
+其他
+
+- 按 0-9 切换到预设的摄像机视角
+- 按 '-' 或 '+' 键切换加载的摄像机
+- 按 `p` 恢复默认动画
+- 拖放 .ply 文件转换为 .splat
+- 拖放 cameras.json 文件加载摄像机
+
+**新功能**
+
+- 按 `Move X+/Move X-/Move Y+/Move Y-/Move Z+/Move Z-` 按照 X/Y/Z 轴移动 X/Y/Z 轴的位置
+- 按 `Rotate X+/Rotate X-/Rotate Y+/Rotate Y-/Rotate Z+/Rotate Z-` 按照 X/Y/Z 轴旋转 X/Y/Z 轴的角度
+- 按 `Reset Axes` 重置 X/Y/Z 轴的位置和角度
+- 按 `Save Axes Data` 保存当前视图 X/Y/Z 轴的位置和角度
 
 
-## controls
+## 其他功能
 
-movement (arrow keys)
+- 按 `v` 将当前视图坐标保存到 URL 中
+- 通过向 CORS 启用的 URL 添加 `url` 参数打开自定义 `.splat` 文件
+- 将已使用 3D 高斯点云处理软件处理过的 `.ply` 文件拖放到页面上，它会自动将文件转换为 `.splat` 格式
 
-- left/right arrow keys to strafe side to side
-- up/down arrow keys to move forward/back
-- `space` to jump
+## 示例
 
-camera angle (wasd)
-
-- `a`/`d` to turn camera left/right
-- `w`/`s` to tilt camera up/down
-- `q`/`e` to roll camera counterclockwise/clockwise
-- `i`/`k` and `j`/`l` to orbit
-
-trackpad
-- scroll up/down to orbit down
-- scroll left/right to orbit left/right
-- pinch to move forward/back
-- ctrl key + scroll up/down to move forward/back
-- shift + scroll up/down to move up/down
-- shift + scroll left/right to strafe side to side
-
-mouse
-- click and drag to orbit
-- right click (or ctrl/cmd key) and drag up/down to move forward/back
-- right click (or ctrl/cmd key) and drag left/right to strafe side to side
-
-touch (mobile)
-- one finger to orbit
-- two finger pinch to move forward/back
-- two finger rotate to rotate camera clockwise/counterclockwise
-- two finger pan to move side-to-side and up-down
-
-other
-- press 0-9 to switch to one of the pre-loaded camera views
-- press '-' or '+'key to cycle loaded cameras
-- press `p` to resume default animation
-- drag and drop .ply file to convert to .splat
-- drag and drop cameras.json to load cameras
-
-## other features
-
-- press `v` to save the current view coordinates to the url
-- open custom `.splat` files by adding a `url` param to a CORS-enabled URL
-- drag and drop a `.ply` file which has been processed with the 3d gaussian splatting software onto the page and it will automatically convert the file to the `.splat` format
-
-## examples
-
-note that as long as your `.splat` file is hosted in a CORS-accessible way, you can open it with the `url` field. 
+请注意，只要你的 `.splat` 文件在 CORS 可访问的方式下托管，你可以通过 `url` 字段打开它。
 
 - https://antimatter15.com/splat/?url=plush.splat#[0.95,0.19,-0.23,0,-0.16,0.98,0.12,0,0.24,-0.08,0.97,0,-0.33,-1.52,1.53,1]
 - https://antimatter15.com/splat/?url=truck.splat
@@ -69,42 +79,40 @@ note that as long as your `.splat` file is hosted in a CORS-accessible way, you 
 - https://antimatter15.com/splat/?url=bicycle.splat
 - https://antimatter15.com/splat/?url=https://media.reshot.ai/models/nike_next/model.splat#[0.95,0.16,-0.26,0,-0.16,0.99,0.01,0,0.26,0.03,0.97,0,0.01,-1.96,2.82,1]
 
-## notes
+## 说明
 
-- written in javascript with webgl 1.0 with no external dependencies, you can just hit view source and read the unminified code. webgl 2.0 doesn't really add any new features that aren't possible with webgl 1.0 with extensions. webgpu is apparently nice but still not very well supported outside of chromium.
-- we sorts splats by a combination of size and opacity and supports progressive loading so you can see and interact with the model without having all the splats loaded. 
-- does not currently support view dependent shading effects with spherical harmonics, this is primarily done to reduce the file size of the splat format so it can be loaded easily into web browsers. For third-order spherical harmonics we need 48 coefficients which is nearly 200 bytes per splat!
-- splat sorting is done asynchronously on the cpu in a webworker. it might be interesting to investigate performing the sort on the gpu with an implementation of bitonic or radix sorting, but it seems plausible to me that it'd be better to let the gpu focus rather than splitting its time between rendering and sorting.
-- earlier experiments used [stochastic transparency](https://research.nvidia.com/publication/2011-08_stochastic-transparency) which looked grainy, and [weighted blended order independent transparency](https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended) which didn't seem to work.
+- 使用 JavaScript 和 WebGL 1.0 编写，无外部依赖，你可以直接查看源代码并阅读未压缩的代码。WebGL 2.0 并没有添加任何 WebGL 1.0 无法实现的功能，只是需要扩展。WebGPU 看起来不错，但在 Chromium 之外支持度不高。
+- 我们根据尺寸和不透明度对 splats 进行排序，并支持渐进加载，因此你可以在未完全加载 splats 的情况下查看和交互模型。
+- 目前不支持使用球谐函数的视图相关阴影效果，主要是为了减少 splat 格式的文件大小，使其能更轻松地加载到浏览器中。对于三阶球谐函数，我们需要 48 个系数，几乎每个 splat 需要 200 字节！
+- splat 排序异步在 CPU 上通过 webworker 处理。研究在 GPU 上实现 bitonic 或基数排序可能会很有趣，但我认为将 GPU 重点放在渲染上比分散精力在排序上更好。
+- 早期的实验使用了 [随机透明度](https://research.nvidia.com/publication/2011-08_stochastic-transparency)，效果较为颗粒感，还有 [加权混合无序透明度](https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended)，但效果不佳。
 
+## 细节
 
-## words
+高斯点云的渲染效率很高，因为它们的工作方式与点云非常相似——事实上，它们使用相同的文件格式（`.ply`），并且可以使用相同的工具打开（不过，要在 MeshLab 中看到颜色，应该先将球谐函数零阶项转换为 RGB 颜色）。可以认为它们本质上是将单个点扩展为透明的 3D 斑点（即点云）。
 
-gaussian splats are very efficient to render because they work in a way which is very similar to point clouds— in fact they use the same file format (`.ply`) and open them up with the same tools (though to see colors in meshlab, you should convert the spherical harmonic zeroth order terms into rgb colors first). you can think of them as essentially generalizing individual points into translucent 3D blobs (the eponymous splats). 
+尽管推断过程类似于传统的 3D 渲染，但参考实现并未利用这些，因为在训练过程中需要整个渲染管道是可微分的（即，你需要能够“反向”运行渲染过程，以确定如何调整每个斑点的位置、大小和颜色，使某个摄像机的视角逐渐接近参考照片）。是否将这种基于梯度的优化称为“神经”在线上是一个有争议的问题。
 
-that said, even though the inference process is very similar to a traditional 3d rendering, the reference implementation doesn't leverage any of that because for training it needs the entire render pipeline to be differentiable (i.e. you need to be able to run the rendering process "backwards" to figure out how to wiggle the location, size and color of each blob to make a particular camera's view incrementally closer to that of a reference photograph). whether or not this gradient based optimization counts as neural is i guess a somewhat debated question online.
+由于这个实现只是一个查看器，因此我们不需要进行可微分渲染。我们的大致方法是将每个斑点传入顶点着色器。我们获取斑点的 xyz 位置，并通过投影矩阵将其投影到屏幕坐标中；我们还获取斑点的缩放和四元数旋转参数，并计算出投影的特征向量，以便绘制边界四边形。然后这些四边形分别使用片段着色器进行着色。
 
-since this implementation is just a viewer we don't need to do any differentiable rendering. our general approach is to take each splat and feed it into a vertex shader. we take the xyz position of the splat and project it to the screen coordinates with a projection matrix, and we take the scale and quaternion rotation parameters of the splat and figure out the projected eigenvectors so we can draw a bounding quadrilateral. these quadrilaterals are then individually shaded with a fragment shader. 
+片段着色器是一个程序，它本质上为每个像素运行，并输出一个颜色。它获取其位置，计算到斑点中心的距离，并使用该距离来确定斑点颜色的透明度通道。现在的实现只存储了 3 个颜色通道（红、蓝、绿），但完整实现使用了 48 个通道来编码任意的视图相关照明。
 
-the fragment shader is a program which essentially runs for each pixel on each fragment (i.e. quadrilateral that was generated by the vertex shader) and outputs a color. It takes its position, calculates the distance from the center of the splat and uses it to determine the opacity channel of the splat's color. right now this implementation only stores 3 (red, blue, green) channels of color for a splat, but the full implementation uses essentially 48 channels to encode arbitrary view-dependent lighting. 
+最烦人的问题是这些片段如何组合成实际的图像。渲染透明物体是计算机图形学中一个未解决的问题，原因在于合成透明物体的过程是不可交换的，也就是说，不同顺序绘制的透明物体叠加的效果不同。
 
-the most annoying problem comes with how these fragments come together and create an actual image. it turns out that rendering translucent objects in general is a somewhat unsolved problem in computer graphics which ultimately stems from the fact that compositing translucent things is not commutative, i.e. a stack of translucent objects looks different based on the order in which they are drawn. 
+一种简单的解决方案是叫做投机透明度，基本上是你假装没有透明度——物体只是不同程度的随机化“瑞士奶酪”。显卡跟踪 z 缓冲区，并丢弃所有不是最上层的像素，然后在每个像素生成一个随机数，并根据透明度随机丢弃像素。这个方法有效，但会给一切带来噪点和抖动的外观。
 
-one easy solution is called speculative transparency, where basically you pretend that you actually have no translucency at all- objects are just different levels of randomized swiss cheese. the graphics card keeps track of a z-buffer and discards all the pixels which are not the top-most, and we generate a random number at each pixel and then discard it if it 90% of the time if it is 90% transparent. this works but it gives everything a noisy, dithered look.
+另一种简单的方法是使用画家算法，它在渲染之前对所有物体进行预排序。在 CPU 上进行这样的排序非常昂贵，比如在演示页面上有大约 100 万个 splats，我的电脑需要 150 毫秒才能完成所有的排序。
 
-another easy approach is to use the painter's algorithm, which basically involves pre-sorting all your objects before rendering them. doing this on the CPU can be rather expensive, with the ~1M splats on the demo page, it takes about 150ms to sort through them all on my computer. 
+参考实现以及大多数其他高斯点云实现采用的方法是在 GPU 上进行排序。一种常见的 GPU 排序算法是 [bitonic 排序](https://en.wikipedia.org/wiki/Bitonic_sorter)，它非常适合并行化。正常的 CPU 比较排序算法（如快速排序/归并排序）可以在 O(n log n) 时间内运行，而 bitonic 排序则稍慢，在 O(n log^2 n) 时间内，但 n 部分可以并行处理，因此总体延迟是 O(log^2 n)，这比 O(n log n) 快。参考实现使用的是基于 [onesweep](https://arxiv.org/abs/2206.01784) 的基数排序，可以在 O(n) 时间内完成排序，因为可以利用排序数字的特点在每个循环中获得比单次比较更多的信息。
 
-the approach that the reference implementation, and most other implementations of gaussian splatting take is to do the sorting on the GPU. one common algorithm for doing sorts on the gpu is called the [bitonic sort](https://en.wikipedia.org/wiki/Bitonic_sorter) as it is very parallelizable. a normal cpu comparison sorting algorithm like quicksort/mergesort can run in O(n log n) time, the bitonic sort is a bit slower at O(n log^2 n), but the n factor can be done in parallel, so the overall latency is O(log^2 n) which is faster than than O(n log n). the reference implementation uses a radix sort based on [onesweep](https://arxiv.org/abs/2206.01784), which can happen in O(n) time because you can leverage the fact that you're sorting numbers to get more information at each cycle than a single comparison. 
+Chrome 最近发布了 webgpu，这是一个新的非常简洁的 API，显然使得可以在浏览器中编写类似于 CUDA 的计算着色器。然而，webgpu 还未被 Firefox 和 Safari 支持。这意味着如果我们想构建一个广泛可用的东西，我们必须坚持使用较旧的 webgl（甚至可能是 webgl 1.0，因为有报道称 webgl 2.0 在 Safari 上的 M1 芯片上存在漏洞或性能问题）。在 webgl 上实现 bitonic 排序仍然是可能的，但排序 100 万个数字需要大约 200 次迭代，因此可能仍然太慢。
 
-chrome has recently shipped webgpu, which is a new very clean api that apparently makes it possible to write things like compute shaders similar to CUDA that work in the browser. however, webgpu is not yet supported by firefox and safari. this means that if we want to build something that is broadly usable, we have to stick with the older webgl (and maybe even webgl 1.0, since there are reports that webgl 2.0 is buggy or slow on safari with the new M1 chips). It's still probably possible to implement a bitonic sort on top of webgl, but it would take about 200 iterations to sort 1M numbers, so it might still be too slow. 
+另一种渲染透明物体的方法叫做深度剥离，它会启用 z 缓冲区，只渲染最上层的透明物体，然后将该 z 缓冲区反馈到渲染过程中，以“剥离”最上层并仅渲染下一层，最后将这些透明层叠加到最终图像中。我没能让这个方法成功运行，但即使成功，速度可能也不快。
 
-another approach to rendering translucent objects is called depth peeling, where you enable the z-buffer and only render the translucent objects that are on the top, and then feed that z-buffer back into the render process to "peel" off the top and render only the layer beneath, before stacking those translucent layers together to a final image. I didn't manage to get this to work, but it's likely that it would be slow anyway.
+另一种有趣的方法叫做 [加权混合无序透明度](https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended)，它在不同的渲染缓冲区中保存一个额外的数值，用作透明度的近似权重，这种方法是可交换的。在我的实验中它不起作用，这在某些高不透明度的 splats 堆叠在一起时是预料之中的。
 
-another interesting approach is something called [weighted blended order independent transparency](https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended) which adds an additional number saved to a different render buffer which is used as a weight for an approximation of translucency which is commutative. it didn't work in my experiments, which is somewhat expected in situations where you have certain splats with high opacity on top of each other. 
+最终，我决定将排序过程放在 CPU 的 webworker 中运行，这样速度会慢一些（大约每秒 4 帧，而主要渲染是 60 帧），但这没关系，因为大多数情况下当你在移动时，z 顺序不会变化得很快（当你直接从一侧跳到另一侧的不同摄像机视角时会出现暂时的伪影）。
 
-the final approach that i settled on is to run the sorting process on the CPU in a webworker, which happens a bit more slowly (at roughly 4fps whereas the main render is at 60fps), but that's fine because most of the time when you are moving around the z order doesn't actually change very fast (this results in momentary artifacts when jumping directly between different camera orientations on opposite sides). 
+## 致谢
 
-
-## acknowledgements
-
-Thanks to Otavio Good for discussions on different approaches for [order independent transparency](https://en.wikipedia.org/wiki/Order-independent_transparency), Mikola Lysenko for [regl](http://regl.party/) and also for helpful advice about webgl and webgpu, Ethan Weber for discussions about how NeRFs work and letting me know that sorting is hard, Gray Crawford for identifying issues with color rendering and camera controls, Anna Brewer for help with implementing animations, and GPT-4 for writing all the WebGL boilerplate. 
+感谢 Otavio Good 对 [无序透明度](https://en.wikipedia.org/wiki/Order-independent_transparency) 不同方法的讨论，感谢 Mikola Lysenko 对 [regl](http://regl.party/) 及对 webgl 和 webgpu 的有益建议，感谢 Ethan Weber 讨论 NeRFs 的工作原理并让我知道排序的难点，感谢 Gray Crawford 识别出颜色渲染和摄像机控制的问题，感谢 Anna Brewer 对实现动画的帮助，感谢 GPT-4 编写所有 WebGL 的样板代码。
